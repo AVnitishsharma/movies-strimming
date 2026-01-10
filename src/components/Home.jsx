@@ -1,10 +1,11 @@
 import axios from "axios"
-import { useState } from "react"
+import { useState, useEffect } from "react"
 const Home = () => {
 
   const [movie, setMovie] = useState([])
   const [topMovie, settopMovie] = useState('')
   const [trailer, setTrailer] = useState(null)
+  const [favorites, setFavorites] = useState([])
 
 
   const getdata = async () => {
@@ -15,20 +16,42 @@ const Home = () => {
     settopMovie(movieData.data.results[6])
   }
 
-  const getTrailer = async (movieId) => {
+  const getTrailer = async (movie) => {
     const data = await fetch(
-      `https://api.themoviedb.org/3/movie/${movieId}/videos?api_key=04c35731a5ee918f014970082a0088b1`
+      `https://api.themoviedb.org/3/movie/${movie.id}/videos?api_key=04c35731a5ee918f014970082a0088b1`
     );
     const json = await data.json();
     setTrailer(json.results[0]?.key);
-
+    addToRecents(movie);
   }
 
-  getdata()
+  const addToFavorites = (movie) => {
+    let favorites = JSON.parse(localStorage.getItem("favorites")) || [];
+    if (!favorites.some((fav) => fav.id === movie.id)) {
+      favorites.push(movie);
+      localStorage.setItem("favorites", JSON.stringify(favorites));
+      setFavorites(favorites);
+    }
+  };
+
+  const addToRecents = (movie) => {
+    let recents = JSON.parse(localStorage.getItem("recents")) || [];
+    recents = recents.filter((recent) => recent.id !== movie.id);
+    recents.unshift(movie);
+    if (recents.length > 20) {
+      recents.pop();
+    }
+    localStorage.setItem("recents", JSON.stringify(recents));
+  };
+
+  useEffect(() => {
+    getdata()
+    setFavorites(JSON.parse(localStorage.getItem("favorites")) || [])
+  }, [])
   
 
   return (
-    <div className="w-[82%] h-full flex flex-col px-6 gap-2">
+    <div className="w-[82vw] h-full flex flex-col px-6 gap-2">
       <div className=" h-[50vh] bg-red-400 rounded-2xl border flex flex-col justify-end relative">
         <img 
           className="w-full h-full object-cover rounded-2xl object-bottom "
@@ -38,11 +61,12 @@ const Home = () => {
         <h3 className="text-4xl font-semibold absolute  bottom-40 left-3 px-2 text-white">{topMovie.title}</h3>
         <p className="w-1/2 text-sm py-2 absolute bottom-13 left-3 px-2 text-white">{topMovie.overview}</p>
         <button 
-          onClick={() => getTrailer(topMovie.id)}
-          className="w-1/5 bg-cyan-600 px-2 py-1 rounded-3xl font-semibold absolute bottom-5 left-5 ">
+          onClick={() => getTrailer(topMovie)}
+          className="w-1/6 bg-cyan-600 px-2 py-1 rounded-3xl font-semibold absolute bottom-5 left-5 hover:scale-105  transition-all duration-300">
             <i className="ri-play-fill"></i>
             Watch Now
-        </button> 
+        </button>
+        <i class="ri-download-2-line absolute bottom-5 left-1/5 px-2 py-1 bg-cyan-600 rounded-full"></i>
       </div>
       <div className="flex justify-between items-center">
         <h2 className="text-2xl font-semibold">Popular Movies</h2>
@@ -51,20 +75,29 @@ const Home = () => {
           onClick={()=> window.location.href = '/viewall'}
         >view all</button>
       </div>
-      <div className="h-[35vh] flex flex-row gap-2 overflow-x-scroll [&::-webkit-scrollbar]:hidden [-ms-overflow-style:none] [scrollbar-width:none]">
+      <div className="h-[35vh] flex flex-row items-center gap-2 pl-2 overflow-x-scroll [&::-webkit-scrollbar]:hidden [-ms-overflow-style:none] [scrollbar-width:none]">
         {
           movie.map((item, index) => {
             return (
               <div 
                 key={index} 
-                onClick={() => getTrailer(item.id)}
-                className=" w-50 bg-cyan-600 rounded-2xl border flex flex-col justify-end shrink-0 relative">
+                onClick={() => getTrailer(item)}
+                className="group w-50 h-60 bg-cyan-600 rounded-2xl border flex flex-col justify-end shrink-0 relative hover:cursor-pointer hover:scale-105 hover:shadow-lg hover:shadow-cyan-300 transition-transform duration-300">
                 <img 
                   src={`https://image.tmdb.org/t/p/w500${item.poster_path}`}
-                  className="w-full h-full object-cover rounded-2xl"
+                  className="w-full h-full object-cover rounded-2xl hover:blur-xs transition-all duration-300"
                 />
                 <h3 className="text-2xl font-bold absolute bottom-0 left-0 px-2 text-white">{item.title}</h3>
-                {/* <p className="text-md py-2">{item.overview}</p> */}
+                <button className="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 font-semibold border-2 rounded-2xl px-1.5 hidden group-hover:block">
+                  <i className="ri-play-fill"></i> Watch
+                </button>
+                <i 
+                  className={`ri-heart-3-line absolute top-1 right-1 text-2xl px-1.5 hidden group-hover:block ${favorites.some((fav) => fav.id === item.id) ? "text-red-600" : "hover:text-red-600"}`}
+                  onClick={(e) => {
+                    e.stopPropagation();
+                    addToFavorites(item);
+                  }}
+                ></i>
               </div>
             )
           })

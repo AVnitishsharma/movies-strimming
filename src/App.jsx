@@ -3,6 +3,8 @@ import Leftbar from "./components/Leftbar";
 import Navbar from "./components/Navbar";
 import { Route, Routes, useLocation } from "react-router-dom";
 import Viewall from "./components/Viewall";
+import Favorite from "./components/Favorite";
+import Recent from "./components/Recent";
 
 const App = () => {
   const location = useLocation();
@@ -16,6 +18,8 @@ const App = () => {
         <Routes>
           <Route path="/" element={<Home />} />
           <Route path="/viewall" element={<Viewall />} />
+          <Route path="/favourites" element={<Favorite />} />
+          <Route path="/recent" element={<Recent />} />
         </Routes>
       </div>
     </div>

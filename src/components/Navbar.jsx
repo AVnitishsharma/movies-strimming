@@ -30,7 +30,7 @@ const Navbar = () => {
           />
         </form>
         <i className="ri-notification-3-line text-white   font-bold"></i>
-        <div className="bg-emerald-400 text-xl font-semibold px-2 py-1 rounded-3xl">
+        <div className="bg-emerald-400 text-xl font-bold px-2 py-1 rounded-3xl">
           N
         </div>
       </div>

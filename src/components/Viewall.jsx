@@ -7,6 +7,7 @@ const Viewall = () => {
   const [page, setPage] = useState(1);
   const [trailer, setTrailer] = useState(null);
   const [searchQuery, setSearchQuery] = useState("");
+  const [favorites, setFavorites] = useState([]);
   const location = useLocation();
 
   const getSearchResults = async () => {
@@ -60,13 +61,37 @@ const Viewall = () => {
     return () => window.removeEventListener("scroll", handleScroll);
   }, [movie]);
 
-  const getTrailer = async (movieId) => {
+  const getTrailer = async (movie) => {
     const data = await fetch(
-      `https://api.themoviedb.org/3/movie/${movieId}/videos?api_key=04c35731a5ee918f014970082a0088b1`
+      `https://api.themoviedb.org/3/movie/${movie.id}/videos?api_key=04c35731a5ee918f014970082a0088b1`
     );
     const json = await data.json();
     setTrailer(json.results[0]?.key);
+    addToRecents(movie);
   };
+
+  const addToFavorites = (movie) => {
+    let favorites = JSON.parse(localStorage.getItem("favorites")) || [];
+    if (!favorites.some((fav) => fav.id === movie.id)) {
+      favorites.push(movie);
+      localStorage.setItem("favorites", JSON.stringify(favorites));
+      setFavorites(favorites);
+    }
+  };
+
+  const addToRecents = (movie) => {
+    let recents = JSON.parse(localStorage.getItem("recents")) || [];
+    recents = recents.filter((recent) => recent.id !== movie.id);
+    recents.unshift(movie);
+    if (recents.length > 20) {
+      recents.pop();
+    }
+    localStorage.setItem("recents", JSON.stringify(recents));
+  };
+
+  useEffect(() => {
+    setFavorites(JSON.parse(localStorage.getItem("favorites")) || []);
+  }, []);
 
   return (
     <div className="h-fit w-full flex flex-row flex-wrap gap-2 bg-gray-900 justify-center pt-4 px-10">
@@ -93,17 +118,24 @@ const Viewall = () => {
         return (
           <div
             key={index}
-            onClick={() => getTrailer(item.id)}
-            className="h-90 w-60 bg-cyan-600 rounded-2xl border flex flex-col justify-end relative"
+            onClick={() => getTrailer(item)}
+            className="group h-90 w-60 bg-cyan-600 rounded-2xl border flex flex-col justify-end relative hover:cursor-pointer hover:scale-105 hover:shadow-lg hover:shadow-cyan-300 transition-transform duration-300 overflow-hidden"
           >
             <img
               src={`https://image.tmdb.org/t/p/w500${item.poster_path}`}
               className="w-full h-full object-cover rounded-2xl"
             />
-            <h3 className=" w-full text-xl font-bold absolute bottom-0 left-0 px-2 text-white bg-[rgba(0,0,0,0.5)]">
+            <h3 className=" w-full text-xl font-bold absolute bottom-0 left-0 px-2 text-white bg-[rgba(0,0,0,0.8)] group-hover:bottom-19">
               {item.title}
             </h3>
-            {/* <p className="text-md py-2">{item.overview}</p> */}
+            <p className="hidden w-full bottom-0 left-0 px-2 text-white bg-[rgba(0,0,0,0.5)] text-sm py-2 group-hover:block group-hover:absolute">{item.overview.slice(0,100)}</p>
+            <i 
+              className={`ri-heart-3-line absolute top-1 right-1 text-2xl px-1.5 hidden group-hover:block ${favorites.some((fav) => fav.id === item.id) ? "text-red-600" : "hover:text-red-600"}`}
+              onClick={(e) => {
+                e.stopPropagation();
+                addToFavorites(item);
+              }}
+            ></i>
           </div>
         );
       })}
