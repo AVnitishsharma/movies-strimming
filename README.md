@@ -2,7 +2,7 @@
 
 Ek simple movie streaming UI built with Vite + React.
 
-![App Demo](public/demo.png)
+![App Demo](public/demo.svg)
 
 Live Demo: https://example.com/live-demo  <!-- Replace this URL with your actual live site -->
 
@@ -59,7 +59,7 @@ npm run preview
 
 ## Replace Demo Image and Live Link
 
-- Demo image: replace `public/demo.png` with a screenshot or image you want to show. The markdown image reference in this README points to `public/demo.png`.
+- Demo image: replace `public/demo.svg` with a screenshot or image you want to show. The markdown image reference in this README points to `public/demo.svg`.
 - Live demo: replace the `https://example.com/live-demo` placeholder above with your deployed URL.
 
 ## Notes
