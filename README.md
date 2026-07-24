@@ -1,12 +1,71 @@
-# React + Vite
+# Movie Streaming Platform
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
+Ek simple movie streaming UI built with Vite + React.
 
-Currently, two official plugins are available:
+![App Demo](public/demo.png)
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react) uses [Babel](https://babeljs.io/) for Fast Refresh
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react-swc) uses [SWC](https://swc.rs/) for Fast Refresh
+Live Demo: https://example.com/live-demo  <!-- Replace this URL with your actual live site -->
 
-## Expanding the ESLint configuration
+## Overview
 
-If you are developing a production application, we recommend using TypeScript with type-aware lint rules enabled. Check out the [TS template](https://github.com/vitejs/vite/tree/main/packages/create-vite/template-react-ts) for information on how to integrate TypeScript and [`typescript-eslint`](https://typescript-eslint.io) in your project.
+This repository contains a small React app showcasing a movie-streaming style UI with components for navigation, recent items, favorites, and a view-all page.
+
+## Features
+
+- Responsive UI (Vite + React)
+- Components: `Navbar`, `Leftbar`, `Home`, `Recent`, `Favorite`, `Viewall`
+- Simple styling with CSS
+
+## Tech Stack
+
+- React
+- Vite
+- JavaScript
+- CSS
+
+## Installation
+
+1. Install dependencies:
+
+```bash
+npm install
+```
+
+2. Run development server:
+
+```bash
+npm run dev
+```
+
+3. Build for production:
+
+```bash
+npm run build
+```
+
+4. Preview production build:
+
+```bash
+npm run preview
+```
+
+## Project Structure
+
+- `index.html`
+- `src/`
+	- `main.jsx` - app entry
+	- `App.jsx` - main app
+	- `components/` - UI components (Navbar, Leftbar, Home, Recent, Favorite, Viewall)
+
+## Replace Demo Image and Live Link
+
+- Demo image: replace `public/demo.png` with a screenshot or image you want to show. The markdown image reference in this README points to `public/demo.png`.
+- Live demo: replace the `https://example.com/live-demo` placeholder above with your deployed URL.
+
+## Notes
+
+- This README uses placeholders for the demo image and live link as requested. Change them to real assets when ready.
+
+---
+
+If you want, I can add a sample `public/demo.png` placeholder image file now. Do you want me to add one?
